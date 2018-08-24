@@ -10,7 +10,7 @@ deck = []
 hands = []
 discard_pile = []
 points = []
-played_cards = []
+collections = []
 game_in_progress = False
 winner = False
 
@@ -40,7 +40,9 @@ def setup_game():
     # deal
     for p in range(players):
         hands.append([])
-        played_cards.append([])
+        collections.append([])
+        # test collections_to_str
+        collections[p].append(['AH','AC','AD'])
         for c in range(7):
             hands[p].append(draw())
     # flip discard
@@ -50,15 +52,31 @@ def setup_game():
     #     print("Player",p)
     #     for c in range(len(playerhands[p])):
     #         print(playerhands[p][c])
+    print('Hands:', hands)
 
 
 def print_game_for_player(p):
+    def hand_to_str(hand):
+        s = ''
+        for c in hand:
+            s += ' ' + c + ' '
+        return s
+
+    def collections_to_str(collections):
+        coll_str = ''
+        for collection in collections:
+            coll_str = coll_str + '['
+            for play in collection:
+                coll_str = coll_str + '(' + hand_to_str(play) + ')'
+            coll_str = coll_str + ']\n'
+        return coll_str
+
     # print discard
     print('Discards:', hand_to_str(discard_pile))
     # print played
-    print('Played:', played_cards)
+    print(f'Played:\n{collections_to_str(collections)}')
     # print player p's hand
-    print('Your Hand:',hand_to_str(hands[p]),'\n')
+    print('Your Hand:', hand_to_str(hands[p]), '\n')
 
 
 def draw():
@@ -118,19 +136,9 @@ def discard(cards):
     return cards.pop()
 
 
-def hand_to_str(hand):
-    s = ''
-    for c in hand:
-        s += '[' + c + ']'
-    return s
-
-
 def player_turn(player_number):
     global winner
-    print("Player", player_number, "'s turn:")
-    # print("hand:", hand_to_str(hands[player_number]))
-    # print("discards:", hand_to_str(discard_pile))
-    # print(len(hands[player_number]))
+    print(f"**** Player {player_number}'s turn: ****")
 
     print_game_for_player(player_number)
 
@@ -145,7 +153,7 @@ def play():
     rounds = 0
     while winner is False and rounds < 5:
         rounds += 1
-        print("******** Round:", rounds,"********")
+        print(f"******** Round: {rounds} ********")
         for p in range(len(hands)):
                 player_turn(p)
 
