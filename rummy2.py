@@ -42,7 +42,7 @@ def setup_game():
         hands.append([])
         collections.append([])
         # test collections_to_str
-        collections[p].append(['AH','AC','AD'])
+        # collections[p].append(['AH','AC','AD'])
         for c in range(7):
             hands[p].append(draw())
     # flip discard
@@ -59,22 +59,21 @@ def print_game_for_player(p):
     def hand_to_str(hand):
         s = ''
         for c in hand:
-            s += ' ' + c + ' '
+            s += f' ({hand.index(c)}): ' + c + '  '
         return s
 
     def collections_to_str(collections):
         coll_str = ''
         for collection in collections:
-            coll_str = coll_str + '['
+            coll_str = coll_str + '\n['
             for play in collection:
                 coll_str = coll_str + '(' + hand_to_str(play) + ')'
-            coll_str = coll_str + ']\n'
+            coll_str = coll_str + ']'
         return coll_str
-
+    # print played
+    print(f'Played:{collections_to_str(collections)}')
     # print discard
     print('Discards:', hand_to_str(discard_pile))
-    # print played
-    print(f'Played:\n{collections_to_str(collections)}')
     # print player p's hand
     print('Your Hand:', hand_to_str(hands[p]), '\n')
 
@@ -136,22 +135,44 @@ def discard(cards):
     return cards.pop()
 
 
+def draw_input(player_number):
+    '''Replaces inline draw code
+    '''
+    pass
+
+
 def player_turn(player_number):
     global winner
+    global discard_pile
     print(f"**** Player {player_number}'s turn: ****")
 
     print_game_for_player(player_number)
+    draw_source = input('Draw a (N)ew card or from (D)iscard?').lower()[0]
+    if draw_source == 'n':
+        hands[player_number].append(draw())
+        print('You drew a', hands[player_number][-1])
+    elif draw_source == 'd':
+        bottom = int(input("what's the bottom card?"))
+        print(bottom)
+        # needs all cases covered
+        if bottom == 0:
+            hands[player_number].extend(discard_pile)
+            discard_pile = []
+        elif bottom < len(discard_pile)-1:
+            hands[player_number].extend(discard_pile[bottom:])
+            discard_pile = discard_pile[:bottom]
 
-    if len(hands[player_number]) > 0:
-        discard_pile.append(discard(hands[player_number]))
-    else:
+    discard_pile.append(discard(hands[player_number]))
+    if len(hands[player_number]) == 0:
         winner = True
-        print(winner)
+        print(f'Player {player_number} wins!')
+
+    print_game_for_player(player_number)
 
 
 def play():
     rounds = 0
-    while winner is False and rounds < 5:
+    while winner is False and rounds < 10:
         rounds += 1
         print(f"******** Round: {rounds} ********")
         for p in range(len(hands)):
