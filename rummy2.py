@@ -1,3 +1,4 @@
+import random
 
 # Setup
 players = 0
@@ -80,27 +81,12 @@ def draw():
 
 
 def ai_think():
-    def get_points(card):
-        ten_cards = ['10', 'J', 'Q', 'K']
-        if card[0] == 'A':
-            return 3
-        elif card[0] in ten_cards:
-            return 2
-        else:
-            return 1
+    def get_points(c):
+        pass
 
 
-    def get_next_in_suit(c):
-        if ranks.index(c) == 12:
-            return c[0] + ranks[0]
-        else:
-            return c[0] + ranks[ranks.index(c)+1]
-
-    def get_prev_in_suit(c):
-        if ranks.index(c) == 0:
-            return c[0] + ranks[12]
-        else:
-            return c[0] + ranks[ranks.index(c)-1]
+    def get_neighbors_in_suit(c):
+        pass
 
 
     def get_same_rank_as(c):
@@ -108,9 +94,7 @@ def ai_think():
 
 
     def create_prospects(hand):
-        prospects = {}
-        for c in hand:
-            pass
+        pass
 
         # print(prospects)
 
@@ -137,12 +121,12 @@ def player_turn(player_number):
 
     def draw_phase():
         global discard_pile
-        draw_source=input('Draw a (N)ew card or from (D)iscard?').lower()[0]
+        draw_source = input('Draw a (N)ew card or from (D)iscard?').lower()[0]
         if draw_source == 'n':
             hands[player_number].append(draw())
             print('You drew a', hands[player_number][-1])
         elif draw_source == 'd':
-            bottom=int(input("what's the bottom card?"))
+            bottom = int(input("what's the bottom card?"))
             print(bottom)
             # needs all cases covered
             if bottom == 0:
@@ -167,13 +151,13 @@ def player_turn(player_number):
         return the_play
 
     def discard_phase(player_number):
-        index_to_discard = int(input('what would you like to discard? ()#):'))
+        index_to_discard = int(input('What would you like to discard? #:'))
         discard_pile.append(hands[player_number].pop(index_to_discard))
 
     print(f"**** Player {player_number}'s turn: ****")
 
     print_game_for_player(player_number)
-    #TODO catch errors, draw again
+    # TODO catch errors, draw again
     draw_phase()
 
     print_game_for_player(player_number)
@@ -181,7 +165,7 @@ def player_turn(player_number):
     # TODO play_phase function
     # TODO loop play_phase until NO
     to_play = 'n'
-    to_play = input('Would you like to (P)la(Y) any of your cards?(Y,N)').lower()[0]
+    to_play = input('Would you like to play any of your cards?(Y,N)').lower()[0]
     if to_play == 'y':
         what_to_play_str = input('Enter cards you would like to play( \'1,4,12\' ):')
         what_to_play = what_to_play_str.split(',')
@@ -190,7 +174,6 @@ def player_turn(player_number):
     print_game_for_player(player_number)
     discard_phase(player_number)
 
-    # discard_pile.append(discard(hands[player_number]))
     if len(hands[player_number]) == 0:
         winner = True
         print(f'Player {player_number} wins!')
@@ -208,7 +191,6 @@ def play():
 
 
 def main():
-
     setup_game()
     play()
 
